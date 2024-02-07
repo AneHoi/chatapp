@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar style="background-color: #2dd36f">
+    <ion-title size="large">Welcome to the shared Chat-Room</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<div class="chat">
+  <ion-list *ngFor="let chatMessage of chatMessages">
+    <ion-item>
+      {{ chatMessage }}
+    </ion-item>
+  </ion-list>
+</div>
+<div>
+  <ion-textarea [formControl]="messageContent" label="Chat here" placeholder="Chat"></ion-textarea>
+  <ion-button (click)="sendMessage()">Send</ion-button>
+  <ion-button (click)="sendMessageToMyself()">SendToMe</ion-button>
+</div>
+<div>
+  <p> There are now: {{PeopleInChat}} online
+  </p>
+</div>

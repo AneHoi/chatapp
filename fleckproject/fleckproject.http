@@ -1,0 +1,6 @@
+@fleckproject_HostAddress = http://localhost:5260
+
+GET {{fleckproject_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
