@@ -10,7 +10,6 @@ public class WebSocetWithMetaData(IWebSocketConnection connection)
 
 public static class Connections
 {
-    public static List<IWebSocketConnection> ConnectionsInMemory = new List<IWebSocketConnection>();
 
     public static Dictionary<Guid, WebSocetWithMetaData> connectionsDictionary = new ();
     //HashSets has really fast lookup time compared to List

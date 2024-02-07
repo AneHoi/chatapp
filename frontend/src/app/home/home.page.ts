@@ -15,6 +15,7 @@ export class HomePage {
   chatMessages: string[] = [];
   ws: WebSocket = new WebSocket("ws://localhost:8181")
   messageContent = new FormControl('');
+  userName = new FormControl('');
   PeopleInChat: string = "1";
 
   constructor() {
@@ -60,5 +61,29 @@ export class HomePage {
       messageContent: this.messageContent.value!
     }
     this.ws.send(JSON.stringify(object));
+  }
+
+  SignIn() {
+    var object = {
+      eventType: "ClientWantsToSignIn",
+      Username: this.userName.value!
+    }
+    this.ws.send(JSON.stringify(object));
+
+    var enterobject={
+      eventType: "ClientWantsToEnterRoom",
+      roomId: 2
+    }
+    this.ws.send(JSON.stringify(enterobject));
+  }
+
+  sendInChat() {
+    var object = {
+      eventType: "ClientWantsToSendToChatRoom",
+      messageContent : this.messageContent.value,
+      roomId : 2
+    }
+    this.ws.send(JSON.stringify(object));
+
   }
 }

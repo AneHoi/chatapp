@@ -17,12 +17,12 @@ public class NumOfPeople : BaseEventHandler<NumOfPeopleDto>
     {
         var peopleCounter = new PeopleCounter()
         {
-            numOfPeopleValue = Connections.ConnectionsInMemory.Count
+            numOfPeopleValue = Connections.connectionsDictionary.Count
         };
         var messageToClient = JsonSerializer.Serialize(peopleCounter);
-        foreach (var ws in Connections.ConnectionsInMemory)
+        foreach (var ws in Connections.connectionsDictionary.Values)
         {
-            ws.Send(messageToClient);
+            ws.Connection.Send(messageToClient);
         }
         return Task.CompletedTask;
     }
