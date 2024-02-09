@@ -52,7 +52,7 @@ public class ChatRepository
         }
     }
 
-    public IEnumerable<ChatMessage> getAllChatsFromRoom()
+    public IEnumerable<ChatMessage> getAllChatsFromRoom(int roomnr)
     {
         const string sql = $@"
             SELECT 
@@ -64,7 +64,7 @@ public class ChatRepository
             ";
         using (var connection = _dataSource.OpenConnection())
         {
-            return connection.Query<ChatMessage>(sql);
+            return connection.Query<ChatMessage>(sql, new {roomnr});
         }
     }
 }

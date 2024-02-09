@@ -29,7 +29,7 @@ public class ChatService
 
     public IEnumerable<ChatMessage> getAllChatsFromRoom(int roomNr)
     {
-        return _chatReository.getAllChatsFromRoom();
+        return _chatReository.getAllChatsFromRoom(roomNr);
     }
     
 }

@@ -6,6 +6,7 @@ using lib;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 var clientEventHandlers = builder.FindAndInjectClientEventHandlers(Assembly.GetExecutingAssembly());
 var app = builder.Build();
 
@@ -21,12 +22,14 @@ server.Start(socket =>
 
     socket.OnMessage = async message =>
     {
+        //This is my global exception handler, and it works, because ALL the traffic goes though the app.InvokeClientEventHandler()
         try
         {
-            app.InvokeClientEventHandler(clientEventHandlers, socket, message);
+            await app.InvokeClientEventHandler(clientEventHandlers, socket, message);
         }
         catch (Exception e)
         {
+            socket.Send(e.Message);
             Console.WriteLine(e.Message);
             Console.WriteLine(e.InnerException);
             Console.WriteLine(e.StackTrace);
