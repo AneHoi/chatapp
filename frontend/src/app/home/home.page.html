@@ -1,12 +1,9 @@
-<ion-header>
-  <ion-toolbar style="background-color: #2dd36f">
-    <ion-title size="large">Welcome to the shared Chat-Room</ion-title>
-  </ion-toolbar>
-</ion-header>
-<ion-grid>
+
+
+<ion-grid class="chatbox" style="width: 70%">
   <ion-row>
-    <ion-col>
-      <h1>chatRoom 2</h1>
+    <ion-col style="text-align: center">
+      <h1 class="chatTitle">chatRoom 2</h1>
       <div class="chat">
         <ion-list *ngFor="let chatMessage of chatMessages">
           <ion-item>
@@ -21,25 +18,6 @@
           <ion-button (click)="SignIn()">Sign In as:</ion-button>
           <ion-input [formControl]="userName"></ion-input>
         </ion-item>
-      </div>
-      <div>
-        <p> There are now: {{ PeopleInChat }} online
-        </p>
-      </div>
-    </ion-col>
-    <ion-col>
-      <h1>ChatRoom 5</h1>
-      <div class="chat">
-        <ion-list *ngFor="let chatMessage of chatMessages">
-          <ion-item>
-            {{ chatMessage }}
-          </ion-item>
-        </ion-list>
-      </div>
-      <div>
-        <ion-textarea [formControl]="messageContent" label="Chat here" placeholder="Chat"></ion-textarea>
-        <ion-button (click)="sendMessage()">Send</ion-button>
-        <ion-button (click)="sendMessageToMyself()">SendToMe</ion-button>
       </div>
       <div>
         <p> There are now: {{ PeopleInChat }} online

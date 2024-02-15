@@ -7,7 +7,16 @@
   top: 50%;
   transform: translateY(-50%);
 }
+
+.chatTitle{
+  background-color: #4c8dff;
+  border-radius: 15px;
+  display: inline-block;
+  padding: 10px;
+}
+
 .chat{
+  background-color: rgba(217, 217, 217, 0.34);
   height: 50%;
   overflow: auto;
 }

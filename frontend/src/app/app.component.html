@@ -1,12 +1,55 @@
 <ion-app>
-  <ion-header [translucent]="true" style="background-color: #46b0e0">
-  <p>
-    Welcome to your new chat app
-  </p>
+  <ion-header [translucent]="true">
+    <app-header></app-header>
   </ion-header>
-  <ion-content class="ion-padding" style="background-color: #46b0e0">
-    <router-outlet ></router-outlet>
-  </ion-content>
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
+
+  <!--ion-content class="ion-padding">
+    <ion-menu contentId="main-content">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Your chats</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list>
+          <ion-item>
+            <ion-avatar aria-hidden="true" slot="start">
+              <img alt="" src="https://ionicframework.com/docs/img/demos/avatar.svg"/>
+            </ion-avatar>
+            <ion-label>StudyGroup</ion-label>
+          </ion-item>
+          <ion-item (click)="openChat()">
+            <ion-avatar aria-hidden="true" slot="start">
+              <img alt="" src="https://ionicframework.com/docs/img/demos/avatar.svg"/>
+            </ion-avatar>
+            <ion-label>MovieChat</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+
+
+    <ion-grid style="background-color: pink">
+      <ion-row>
+        <ion-col size="auto" style="background-color: orange">
+
+          <ion-menu-toggle id="main-content">
+            <ion-button>hi
+              <ion-icon name="menu"></ion-icon>
+            </ion-button>
+          </ion-menu-toggle>
+
+
+        </ion-col>
+        <ion-col>
+          <router-outlet></router-outlet>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    </ion-content-->
   <ion-footer style="background-color: #46b0e0">
     <p>
       Chat Roomies inc.
