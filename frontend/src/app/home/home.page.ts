@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {FormControl} from "@angular/forms";
-import {BaseDto, ServerEchosClientDto, ServerSendsMessageBroadDto} from "../../assets/BaseDto";
+import {BaseDto, ServerEchosClientDto, ServerSendsMessageBroadDto} from "../../BaseDto";
 import {MessageDto, PeopleCounterDto} from "src/Models"
 
 @Component({

@@ -1,10 +1,7 @@
 <ion-toolbar>
-  <ion-buttons slot="secondary">
-    <img routerLink="home" width="70" src="assets/taxapplogo.png" alt="taxapp-logo">
-    <p class="TaxappText" routerLink="home">Taxapp</p>
+  <ion-buttons class="margin" slot="start">
+    <img routerLink="home" width="70" src="assets/icon/connecting.png" alt="connecting-logo">
   </ion-buttons>
-  <div class="centerElements">
-  </div>
-  <p class="TaxappText" slot="end">{{ dynamicText }} </p>
-  <ion-button slot="end" (click)="loginoutUser()" routerLink="login">{{loginOut}}</ion-button>
+  <p class="ConnectingText" slot="end">{{ dynamicText }} </p>
+  <ion-button class="margin" slot="end" (click)="loginoutUser()" routerLink="login">{{loginOut}}</ion-button>
 </ion-toolbar>

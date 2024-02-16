@@ -8,6 +8,14 @@ export interface PeopleCounterDto{
   infoMessage: string
 
 }
+
+export interface Chat {
+  id: number
+  name: string
+
+}
+
+
 export type TaxiDTO = TaxInfo[]
 
 export interface TaxInfo {

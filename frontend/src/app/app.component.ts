@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {Chat} from "../Models";
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,18 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor() {}
+  chatname: string = 'placeholder';
+  allchates = [
+    {id: 1, name: 'Studygroup'},
+    {id: 2, name: 'Moviegroup'}
+  ];
+
+
+  constructor() {
+  }
+
+  openChat() {
+    console.log("Tapped into chat")
+
+  }
 }

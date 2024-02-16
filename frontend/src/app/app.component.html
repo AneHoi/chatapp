@@ -1,12 +1,14 @@
 <ion-app>
   <ion-header [translucent]="true">
+    <!--IMPORTANT: refer to elements used in the app.module.ts -->
     <app-header></app-header>
   </ion-header>
   <div class="container">
     <router-outlet></router-outlet>
   </div>
 
-  <!--ion-content class="ion-padding">
+  <ion-content class="ion-padding">
+    <!--The "popover" menu -->
     <ion-menu contentId="main-content">
       <ion-header>
         <ion-toolbar>
@@ -15,17 +17,13 @@
       </ion-header>
       <ion-content>
         <ion-list>
-          <ion-item>
+          <ion-item *ngFOR="let chat of allChats"
+                    (click)="openChat()">
             <ion-avatar aria-hidden="true" slot="start">
               <img alt="" src="https://ionicframework.com/docs/img/demos/avatar.svg"/>
             </ion-avatar>
-            <ion-label>StudyGroup</ion-label>
-          </ion-item>
-          <ion-item (click)="openChat()">
-            <ion-avatar aria-hidden="true" slot="start">
-              <img alt="" src="https://ionicframework.com/docs/img/demos/avatar.svg"/>
-            </ion-avatar>
-            <ion-label>MovieChat</ion-label>
+            <ion-label>{{chat.name}}</ion-label>
+            <ion-label>{{chat.id}}</ion-label>
           </ion-item>
         </ion-list>
       </ion-content>
@@ -49,7 +47,7 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-    </ion-content-->
+    </ion-content>
   <ion-footer style="background-color: #46b0e0">
     <p>
       Chat Roomies inc.

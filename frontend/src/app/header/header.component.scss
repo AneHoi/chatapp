@@ -9,7 +9,7 @@
   height: calc(100vh - 100px - 100px);
 }
 
-.TaxappText{
+.ConnectingText{
   font-family: 'Audiowide', sans-serif;
   font-size: 40px;
 }
@@ -20,4 +20,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.leftPlaceElements{
+  height: 75%;
+  align-items: center;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+}
+
+.margin {
+  margin-right: 25px;
+  margin-left: 25px;
 }
