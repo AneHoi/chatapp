@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {FormControl} from "@angular/forms";
 import {BaseDto, ServerEchosClientDto, ServerSendsMessageBroadDto} from "../../BaseDto";
 import {MessageDto, PeopleCounterDto} from "src/Models"
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-home',
