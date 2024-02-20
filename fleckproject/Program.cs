@@ -1,54 +1,89 @@
 using System.Reflection;
 using System.Text.Json;
 using Fleck;
-using fleckproject;
 using lib;
 
-var builder = WebApplication.CreateBuilder(args);
+//A class with a startup method for testing 
+namespace fleckproject;
 
-
-var clientEventHandlers = builder.FindAndInjectClientEventHandlers(Assembly.GetExecutingAssembly());
-var app = builder.Build();
-
-
-var server = new WebSocketServer("ws://0.0.0.0:8181");
-
-server.Start(socket =>
+public static class Startup
 {
-    socket.OnOpen = () =>
+    public static void Main(string[] args)
     {
-        Connections.AddConnection(socket);
-    };
+        Statup(args);
+        WebApplication.CreateBuilder(args).Build().Run();
+    }
 
-    socket.OnMessage = async message =>
+    public static void Statup(string[] args)
     {
-        //This is my global exception handler, and it works, because ALL the traffic goes though the app.InvokeClientEventHandler()
-        try
+        var builder = WebApplication.CreateBuilder(args);
+
+
+        var clientEventHandlers = builder.FindAndInjectClientEventHandlers(Assembly.GetExecutingAssembly());
+        var app = builder.Build();
+
+
+        var server = new WebSocketServer("ws://0.0.0.0:8181");
+        var counter = 1;
+        server.Start(socket =>
         {
-            await app.InvokeClientEventHandler(clientEventHandlers, socket, message);
-        }
-        catch (Exception e)
-        {
-            socket.Send(e.Message);
-            Console.WriteLine(e.Message);
-            Console.WriteLine(e.InnerException);
-            Console.WriteLine(e.StackTrace);
-        }
-    };
-    socket.OnClose = () =>
-    {
-        Connections.connectionsDictionary.Remove(socket.ConnectionInfo.Id);
-        foreach (var webSocetWithMetaData in Connections.connectionsDictionary)
-        {
-            webSocetWithMetaData.Value.Connection.Send(JsonSerializer.Serialize(new PeopleCounter()
+            socket.OnOpen = () =>
+            {
+                counter++;
+                Connections.AddConnection(socket);
+                foreach (var webSocetWithMetaData in Connections.connectionsDictionary)
                 {
-                    numOfPeopleValue = Connections.connectionsDictionary.Count,
-                    infoMessage = "A user has left the chat"
-                })
-            );
-        }
-    };
-});
+                    webSocetWithMetaData.Value.Connection.Send(JsonSerializer.Serialize(new PeopleCounter()
+                        {
+                            numOfPeopleValue = Connections.connectionsDictionary.Count,
+                            infoMessage = "A user has joined the chat"
+                        })
+                    );
+                    Connections.AddToRoom(socket, counter);
+                    List<int> rooms = new List<int>();
+                    foreach (var chatRoom in Connections.chatRooms)
+                    {
+                        rooms.Add(chatRoom.Key);
+                    }
 
+                    webSocetWithMetaData.Value.Connection.Send(JsonSerializer.Serialize(new AllRooms()
+                        {
+                            roomIds = rooms
+                        })
+                    );
+                }
+            };
 
-WebApplication.CreateBuilder(args).Build().Run();
+            socket.OnMessage = async message =>
+            {
+                //This is my global exception handler, and it works, because ALL the traffic goes though the app.InvokeClientEventHandler()
+                try
+                {
+                    await app.InvokeClientEventHandler(clientEventHandlers, socket, message);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("An error has occored");
+                    socket.Send(e.Message);
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.InnerException);
+                    Console.WriteLine(e.StackTrace);
+                }
+            };
+            socket.OnClose = () =>
+            {
+                Connections.connectionsDictionary.Remove(socket.ConnectionInfo.Id);
+                Console.WriteLine("Currently in the chat " + Connections.connectionsDictionary.Count);
+                foreach (var webSocetWithMetaData in Connections.connectionsDictionary)
+                {
+                    webSocetWithMetaData.Value.Connection.Send(JsonSerializer.Serialize(new PeopleCounter()
+                        {
+                            numOfPeopleValue = Connections.connectionsDictionary.Count,
+                            infoMessage = "A user has left the chat"
+                        })
+                    );
+                }
+            };
+        });
+    }
+}

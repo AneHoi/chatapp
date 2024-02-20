@@ -8,6 +8,11 @@ export interface PeopleCounterDto{
   infoMessage: string
 
 }
+
+export interface AllRoomsDto{
+  roomIds: number []
+}
+
 export type ChatRoomDTO = ChatRoom[]
 export interface ChatRoom {
   id: number

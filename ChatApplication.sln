@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "commons", "commons\commons.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fleckproject", "fleckproject\fleckproject.csproj", "{5F4575B0-FABC-4071-ACA7-D9B08A593213}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{0C46C566-D1B0-4384-A9FA-E5AA92BA7928}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,10 @@ Global
 		{5F4575B0-FABC-4071-ACA7-D9B08A593213}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F4575B0-FABC-4071-ACA7-D9B08A593213}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F4575B0-FABC-4071-ACA7-D9B08A593213}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C46C566-D1B0-4384-A9FA-E5AA92BA7928}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C46C566-D1B0-4384-A9FA-E5AA92BA7928}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C46C566-D1B0-4384-A9FA-E5AA92BA7928}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C46C566-D1B0-4384-A9FA-E5AA92BA7928}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection

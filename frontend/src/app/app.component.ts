@@ -14,25 +14,11 @@ import {BaseDto} from "../BaseDto";
 export class AppComponent {
 
 
-  ws: WebSocket = new WebSocket("ws://localhost:8181")
 
   constructor(public state: State, public http: HttpClient) {
-    this.ws.onmessage = message => {
-      try {
-        const messageFromServer = JSON.parse(message.data) as BaseDto<any>
-
-        // @ts-ignore
-        this[messageFromServer.eventType].call(this, messageFromServer);
-      } catch (exeption) {
-        // @ts-ignore
-        this.chatMessages.push(message.data)
-      }
-    }
+    this.state.listener()
   }
 
-  AllRooms(dto: ChatRoomDTO){
-    this.state.allchatRooms = dto
-  }
 
   AllChatMessagesInRoom(dto: ChatsInRoomDTO){
     for (let msg of dto) {

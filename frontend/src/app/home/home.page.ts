@@ -3,6 +3,7 @@ import {FormControl} from "@angular/forms";
 import {BaseDto, ServerEchosClientDto, ServerSendsMessageBroadDto} from "../../BaseDto";
 import {MessageDto, PeopleCounterDto} from "src/Models"
 import {environment} from "../../environments/environment";
+import {State} from "../../state";
 
 @Component({
   selector: 'app-home',
@@ -14,29 +15,17 @@ export class HomePage {
 
 
   chatMessages: string[] = [];
-  ws: WebSocket = new WebSocket("ws://localhost:8181")
   messageContent = new FormControl('');
   userName = new FormControl('');
-  PeopleInChat: string = "1";
+  peopleInChat: string = "1";
 
-  constructor() {
-    this.ws.onmessage = message => {
-      try {
-        const messageFromServer = JSON.parse(message.data) as BaseDto<any>
-
-        // @ts-ignore
-        this[messageFromServer.eventType].call(this, messageFromServer);
-      } catch (exeption) {
-        // @ts-ignore
-        this.chatMessages.push(message.data)
-        }
-    }
+  constructor(public state: State) {
   }
 
   PeopleCounter(dto: PeopleCounterDto){
-    this.PeopleInChat = dto.numOfPeopleValue + "";
+    this.peopleInChat = dto.numOfPeopleValue + "";
     this.chatMessages.push(dto.infoMessage)
-    console.log(dto.numOfPeopleValue + "\n" + dto.infoMessage)
+    console.log("people in chat from home" + dto.numOfPeopleValue + "\n" + dto.infoMessage)
   }
 
   ServerEchosClient(dto: ServerEchosClientDto) {
@@ -53,7 +42,7 @@ export class HomePage {
       eventType: "ClientWantsToBroardCast",
       messageContent: this.messageContent.value!
     }
-    this.ws.send(JSON.stringify(object));
+    this.state.ws.send(JSON.stringify(object));
   }
 
   sendMessageToMyself() {
@@ -61,7 +50,7 @@ export class HomePage {
       eventType: "ClientWansToEchoServer",
       messageContent: this.messageContent.value!
     }
-    this.ws.send(JSON.stringify(object));
+    this.state.ws.send(JSON.stringify(object));
   }
 
   SignIn() {
@@ -69,13 +58,13 @@ export class HomePage {
       eventType: "ClientWantsToSignIn",
       Username: this.userName.value!
     }
-    this.ws.send(JSON.stringify(object));
+    this.state.ws.send(JSON.stringify(object));
 
     var enterobject={
       eventType: "ClientWantsToEnterRoom",
       roomId: 2
     }
-    this.ws.send(JSON.stringify(enterobject));
+    this.state.ws.send(JSON.stringify(enterobject));
   }
 
   sendInChat() {
@@ -84,7 +73,7 @@ export class HomePage {
       messageContent : this.messageContent.value,
       roomId : 2
     }
-    this.ws.send(JSON.stringify(object));
+    this.state.ws.send(JSON.stringify(object));
 
   }
 }

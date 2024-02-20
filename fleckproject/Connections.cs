@@ -16,6 +16,7 @@ public static class Connections
     public static Dictionary<int, HashSet<Guid>> chatRooms = new ();
     public static bool AddConnection(IWebSocketConnection socket)
     {
+        Console.WriteLine("A new user has joined, id: " + socket.ConnectionInfo.Id);
         return connectionsDictionary.TryAdd(socket.ConnectionInfo.Id, new WebSocetWithMetaData(socket));
     }
 

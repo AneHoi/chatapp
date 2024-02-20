@@ -17,13 +17,12 @@
       </ion-header>
       <ion-content>
         <ion-list>
-          <ion-item *ngFOR="let chat of state.allchatRooms"
+          <ion-item *ngFor="let chat of state.allchatRooms"
                     (click)="openChat()">
             <ion-avatar aria-hidden="true" slot="start">
               <img alt="" src="https://ionicframework.com/docs/img/demos/avatar.svg"/>
             </ion-avatar>
-            <ion-label>{{chat.name}}</ion-label>
-            <ion-label>{{chat.id}}</ion-label>
+            <ion-label>{{chat.valueOf()}}</ion-label>
           </ion-item>
         </ion-list>
       </ion-content>
