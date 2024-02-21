@@ -8,7 +8,7 @@ namespace fleckproject;
 
 public static class Startup
 {
-    public static void Main(string[] args)
+    public static void Main(string[] args)                                                                 
     {
         Statup(args);
         WebApplication.CreateBuilder(args).Build().Run();
