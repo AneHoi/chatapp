@@ -23,7 +23,6 @@ export class State {
     this.ws.onmessage = message => {
       try {
         const messageFromServer = JSON.parse(message.data) as BaseDto<any>
-
         // @ts-ignore
         this[messageFromServer.eventType].call(this, messageFromServer);
       } catch (exeption) {
@@ -31,9 +30,7 @@ export class State {
         this.chatMessages.push(message.data)
       }
     }
-
   }
-
 
   PeopleCounter(dto: PeopleCounterDto){
     this.peopleInChat = dto.numOfPeopleValue + "";
