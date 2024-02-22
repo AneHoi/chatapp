@@ -11,6 +11,7 @@ public class ClientWantsToSendToChatRoomDto : BaseDto
     public int roomId { get; set; }
 }
 
+[RateLimit(5,10)]
 public class ClientWantsToSendToChatRoom : BaseEventHandler<ClientWantsToSendToChatRoomDto>
 {
     public override Task Handle(ClientWantsToSendToChatRoomDto dto, IWebSocketConnection socket)

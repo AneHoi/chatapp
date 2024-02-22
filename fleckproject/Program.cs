@@ -8,7 +8,7 @@ namespace fleckproject;
 
 public static class Startup
 {
-    public static void Main(string[] args)                                                                 
+    public static void Main(string[] args)
     {
         Statup(args);
         WebApplication.CreateBuilder(args).Build().Run();
@@ -18,17 +18,15 @@ public static class Startup
     {
         var builder = WebApplication.CreateBuilder(args);
 
+
         var clientEventHandlers = builder.FindAndInjectClientEventHandlers(Assembly.GetExecutingAssembly());
         var app = builder.Build();
-        
+
         var server = new WebSocketServer("ws://0.0.0.0:8181");
         var counter = 1;
         server.Start(socket =>
         {
-            socket.OnOpen = () =>
-            {
-                anotherUserJoined(counter, socket);
-                            };
+            socket.OnOpen = () => { anotherUserJoined(counter, socket); };
 
             socket.OnMessage = async message =>
             {
@@ -39,19 +37,11 @@ public static class Startup
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("An error has occored");
-                    socket.Send(e.Message);
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine(e.InnerException);
-                    Console.WriteLine(e.StackTrace);
+                    GlobalExeptionhandler.Handle(e, socket, message);
                 }
             };
-            
-            socket.OnClose = () =>
-            {
-                userLeftProgram(socket);
-                
-            };
+
+            socket.OnClose = () => { userLeftProgram(socket); };
         });
     }
 
@@ -61,7 +51,7 @@ public static class Startup
         Connections.AddConnection(socket);
         foreach (var webSocetWithMetaData in Connections.connectionsDictionary)
         {
-            webSocetWithMetaData.Value.Connection.Send(JsonSerializer.Serialize(new PeopleCounter()
+            webSocetWithMetaData.Value.connection.Send(JsonSerializer.Serialize(new PeopleCounter()
                 {
                     numOfPeopleValue = Connections.connectionsDictionary.Count,
                     infoMessage = "A user has joined the chat"
@@ -74,13 +64,12 @@ public static class Startup
                 rooms.Add(chatRoom.Key);
             }
 
-            webSocetWithMetaData.Value.Connection.Send(JsonSerializer.Serialize(new AllRooms()
+            webSocetWithMetaData.Value.connection.Send(JsonSerializer.Serialize(new AllRooms()
                 {
                     roomIds = rooms
                 })
             );
         }
-
     }
 
 
@@ -90,7 +79,7 @@ public static class Startup
         Console.WriteLine("Currently in the chat " + Connections.connectionsDictionary.Count);
         foreach (var webSocetWithMetaData in Connections.connectionsDictionary)
         {
-            webSocetWithMetaData.Value.Connection.Send(JsonSerializer.Serialize(new PeopleCounter()
+            webSocetWithMetaData.Value.connection.Send(JsonSerializer.Serialize(new PeopleCounter()
                 {
                     numOfPeopleValue = Connections.connectionsDictionary.Count,
                     infoMessage = "A user has left the chat"

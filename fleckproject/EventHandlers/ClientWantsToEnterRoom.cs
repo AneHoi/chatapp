@@ -9,6 +9,7 @@ public class ClientWantsToEnterRoomDto : BaseDto
     public int roomId { get; set; }
 }
 
+[RateLimit(5,10)]
 public class ClientWantsToEnterRoom : BaseEventHandler<ClientWantsToEnterRoomDto>
 {
     public override Task Handle(ClientWantsToEnterRoomDto dto, IWebSocketConnection socket)

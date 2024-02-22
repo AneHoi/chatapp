@@ -1,3 +1,4 @@
+using System.Security.Authentication;
 using fleckproject;
 using lib;
 using NUnit.Framework.Internal;
@@ -23,16 +24,35 @@ public class Tests
         }, response => response.Count(dto => dto.eventType == nameof(ServerWelcomesUser)) == 1);
     }
 
+    
     [Test]
-    public async Task ClientsWansToEchoServer()
+    public async Task ClientsWansToEchoServerWithNoAuth()
     {
         var ws = await new WebSocketTestClient().ConnectAsync();
         await ws.DoAndAssert(new ClientWansToEchoServerDto()
         {
             messageContent = "Hello"
-        }, response => response.Count(dto => dto.eventType == nameof(ServerEchosClient)) == 1);
+        }, response => response.Count(dto => dto.eventType == nameof(ServerSendsErrorMessageToClient)) == 1);
+        //authentication is missing, so the expected value is the Errormessage
     }
 
+    [Repeat(3)] //Testing the ratelimiter
+    [Test]
+    public async Task ClientsWansToEchoServerAndTriggerRateLimiter()
+    {
+        var ws = await new WebSocketTestClient().ConnectAsync();
+        await ws.DoAndAssert(new ClientWantsToSignInDto()
+        {
+            Username = "Bob"
+        }, response => response.Count(dto => dto.eventType == nameof(ServerWelcomesUser)) == 1);
+
+        await ws.DoAndAssert(new ClientWansToEchoServerDto()
+        {
+            messageContent = "Hello"
+        }, response => response.Count(dto => dto.eventType == nameof(ServerEchosClient)) == 1);
+        //0 because the authentication is missing
+    }
+    
     [Test]
     public async Task EnterRoom()
     {

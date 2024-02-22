@@ -18,6 +18,7 @@ export class HomePage {
   messageContent = new FormControl('');
   userName = new FormControl('');
   peopleInChat: string = "1";
+  chatroomName: string = "No chatrooms selected";
 
   constructor(public state: State) {
   }

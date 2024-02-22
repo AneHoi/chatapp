@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using infrastructure.datamodels;
 using infrastructure.Models;
 using Npgsql;
 
@@ -29,10 +30,13 @@ public class ChatRepository
     {
         const string sql = $@"
             SELECT
-                username as {nameof(User.userName)}
-            FROM chatroomies.users
-            WHERE username = @username
-            ";
+                id as {{nameof(User.id)}},
+                username as {{nameof(User.username)}},
+                tlfnumber as {{nameof(User.tlfnumber)}},
+                email as {{nameof(User.email)}}
+            FROM taxapp.users
+            WHERE id = @id;
+         ";
         using (var connection = _dataSource.OpenConnection())
         {
             return connection.QueryFirst<User>(sql, new { username });

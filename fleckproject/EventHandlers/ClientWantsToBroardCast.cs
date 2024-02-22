@@ -11,7 +11,7 @@ public class ClientWantsToBroardCastDto : BaseDto
 
 }
 
-
+[RateLimit(5,10)]
 public class ClientWantsToBroardCast : BaseEventHandler<ClientWantsToBroardCastDto>
 {
     public override Task Handle(ClientWantsToBroardCastDto dto, IWebSocketConnection socket)
@@ -23,7 +23,7 @@ public class ClientWantsToBroardCast : BaseEventHandler<ClientWantsToBroardCastD
         var messageToClients = JsonSerializer.Serialize(message);
         foreach (var s in Connections.connectionsDictionary.Values)
         {
-            s.Connection.Send(messageToClients);
+            s.connection.Send(messageToClients);
         }
         return Task.CompletedTask;
     }

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Fleck;
+using fleckproject.EventFilters;
 using lib;
 
 namespace fleckproject;
@@ -9,7 +10,9 @@ public class ClientWansToEchoServerDto : BaseDto
     public string messageContent { get; set; }
 }
 
-//For deserializing objects
+[Auth]
+[RateLimit(2,10)]
+//For deserializing objects'
 public class ClientWansToEchoServer : BaseEventHandler<ClientWansToEchoServerDto> 
 {
     //Everything inside here, wil be run on the trigger(event) from the client

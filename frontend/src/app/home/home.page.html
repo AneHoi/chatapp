@@ -3,7 +3,7 @@
 <ion-grid class="chatbox" style="width: 70%">
   <ion-row>
     <ion-col style="text-align: center">
-      <h1 class="chatTitle">chatRoom 2</h1>
+      <h1 class="chatTitle">{{chatroomName}}</h1>
       <div class="chat">
         <ion-list *ngFor="let chatMessage of chatMessages">
           <ion-item>
@@ -14,10 +14,10 @@
       <div>
         <ion-textarea [formControl]="messageContent" label="Chat here" placeholder="Chat"></ion-textarea>
         <ion-button (click)="sendInChat()">SendInChat</ion-button>
-        <ion-item>
+        <div>
           <ion-button (click)="SignIn()">Sign In as:</ion-button>
           <ion-input [formControl]="userName"></ion-input>
-        </ion-item>
+        </div>
       </div>
       <div>
         <p> There are now: {{ peopleInChat }} online

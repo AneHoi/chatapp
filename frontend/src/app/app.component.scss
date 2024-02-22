@@ -1,3 +1,9 @@
 ion-app.chat, ion-content.chat, ion-menu.chat, ion-header.chat, ion-footer.chat, ion-grid.chat ion-item.chat{
   background-color: rgb(221, 0, 238);
 }
+
+.flex-container {
+  height: 100%;
+  display: flex;
+  background-color: rgba(139, 180, 255, 0.45);
+}

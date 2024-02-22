@@ -22,31 +22,30 @@
             <ion-avatar aria-hidden="true" slot="start">
               <img alt="" src="https://ionicframework.com/docs/img/demos/avatar.svg"/>
             </ion-avatar>
-            <ion-label>{{chat.valueOf()}}</ion-label>
+            <ion-label>{{ chat.valueOf() }}</ion-label>
           </ion-item>
         </ion-list>
       </ion-content>
     </ion-menu>
 
+    <div class="flex-container">
 
-    <ion-grid style="background-color: pink; height: 100vh">
-      <ion-row>
-        <ion-col size="auto" style="background-color: orange">
+      <div style="flex-grow: 1">
+        <ion-menu-toggle id="main-content">
+          <ion-button>
+            <ion-icon name="menu"></ion-icon>
+          </ion-button>
+        </ion-menu-toggle>
+      </div>
 
-          <ion-menu-toggle id="main-content">
-            <ion-button>hi
-              <ion-icon name="menu"></ion-icon>
-            </ion-button>
-          </ion-menu-toggle>
+      <div style="flex-grow: 8">
+        <router-outlet></router-outlet>
+      </div>
 
-        </ion-col>
-        <ion-col>
-          <router-outlet></router-outlet>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-    </ion-content>
-  <ion-footer style="background-color: #46b0e0">
+    </div>
+
+  </ion-content>
+  <ion-footer class="background">
     <p>
       Chat Roomies inc.
     </p>
