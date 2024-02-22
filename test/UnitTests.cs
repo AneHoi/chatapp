@@ -49,7 +49,7 @@ public class Tests
         for (int i = 1; i < 10; i++)
         {
             if (i <= expectedTop)
-            {
+            { 
                 await ws.DoAndAssert(new ClientWansToEchoServerDto()
                 {
                     messageContent = "This should work"
