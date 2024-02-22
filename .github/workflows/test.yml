@@ -11,3 +11,5 @@ jobs:
         with:
           dotnet-version: 8.0.x
       - run: cd test && dotnet test
+        env:
+          FULLSTACK_SKIP_RATE_LIMITING: ${{secrets.FULLSTACK_SKIP_RATE_LIMITING}}
