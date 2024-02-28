@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Authentication;
 using System.Text.Json;
 using Fleck;
+using fleckproject.Exeptions;
 using lib;
 
 namespace fleckproject;
@@ -31,10 +32,24 @@ public static class GlobalExeptionhandler
                 errorMessage = exeption.Message
             }));
         }
+
+        if (exeption is TooMuchHateSpeechExeption)
+        {
+            socket.Send(JsonSerializer.Serialize(new TooMuchHateSpeech()
+            {
+                errorMessage = exeption.Message
+            }));
+        }
     }
+}
+
+public class TooMuchHateSpeech : BaseDto
+{
+    public string errorMessage { get; set; }
 }
 
 public class ServerSendsErrorMessageToClient : BaseDto
 {
     public string errorMessage { get; set; }
 }
+

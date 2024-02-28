@@ -6,7 +6,6 @@ export interface MessageDto {
 export interface PeopleCounterDto{
   numOfPeopleValue: number
   infoMessage: string
-
 }
 
 export interface AllRoomsDto{

@@ -1,12 +1,9 @@
-
-  <section class="parentdiv">
-    <div class="childdiv">
-      <ion-input [formControl]="emailForm" label="Email" label-placement="floating" placeholder="Email"></ion-input>
-      <br />
-      <ion-input [formControl]="passwordForm" label="Password" label-placement="floating" type="password" placeholder="Password"></ion-input>
-      <br />
-      <ion-button [disabled]="loginForm.invalid" (click)="loginOut()" >{{dynamicLogInOutText}}</ion-button>
-      <!--ion-button [routerLink]="['/home']" >Login</ion-button-->
-      <p>Have not got an account yet? <a routerLink="/register">Create an account here</a></p>
-    </div>
-  </section>
+<section class="parentdiv">
+  <div class="childdiv">
+    <ion-input [formControl]="emailForm" label="Username" label-placement="floating" placeholder="Username"></ion-input>
+    <br/>
+    <ion-button [disabled]="loginForm.invalid" (click)="loginOut()">{{ dynamicLogInOutText }}</ion-button>
+    <!--ion-button [routerLink]="['/home']" >Login</ion-button-->
+    <p>Have not got an account yet? <a routerLink="/register">Create an account here</a></p>
+  </div>
+</section>

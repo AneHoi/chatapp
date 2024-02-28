@@ -13,3 +13,14 @@ export class ServerEchosClientDto extends BaseDto<ServerEchosClientDto>{
 export class ServerSendsMessageBroadDto extends BaseDto<ServerSendsMessageBroadDto>{
   message?: string;
 }
+export class ServerWelcomesUserDto extends BaseDto<ServerWelcomesUserDto>{
+  message?: string;
+}
+export class ServerSendsErrorMessageToClient extends BaseDto<ServerWelcomesUserDto>{
+  errorMessage?: string;
+}
+
+export class ServerBroardcastsMessageWithUsernameDto extends BaseDto<ServerBroardcastsMessageWithUsernameDto>{
+  message?: string;
+  username?: string;
+}

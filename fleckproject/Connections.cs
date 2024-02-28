@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Threading.RateLimiting;
 using Fleck;
 
@@ -7,7 +8,8 @@ public class WebSocetWithMetaData()
 {
     public IWebSocketConnection? connection { get; set; }
     public string Username { get; set; }
-
+    
+    public int Warnings { get; set; }
     public Dictionary<string, RateLimiter> RateLimitPerEvent { get; set; } = new();
 }
 
@@ -27,23 +29,38 @@ public static class Connections
         });
     }
 
-    public static bool AddToRoom(IWebSocketConnection socket, int room)
+    public static void AddToRoom(IWebSocketConnection socket, int room)
     {
+        Console.WriteLine("room is available " + chatRooms.ContainsKey(room));
+
         if (!chatRooms.ContainsKey(room))
             chatRooms.Add(room, new HashSet<Guid>());
-        return chatRooms[room].Add(socket.ConnectionInfo.Id);
+        Console.WriteLine("Added to room " + room);
+
+        List<int> rooms = new List<int>();
+        foreach (var chatRoom in chatRooms)
+        {
+            rooms.Add(chatRoom.Key);
+        }
+
+        socket.Send(JsonSerializer.Serialize(new AllRooms()
+        {
+            roomIds = rooms
+        }));
+        
+        chatRooms[room].Add(socket.ConnectionInfo.Id);
     }
 
     public static void BroadcastToRooms(int room, string message)
     {
-        if (chatRooms.TryGetValue(room, out var guids))
+        Console.WriteLine("Inside broardcast");
+        if (chatRooms.ContainsKey(room))
         {
-            foreach (var guid in guids)
+            HashSet<Guid> chatrooms = chatRooms[room];
+            foreach (var socetId in chatrooms)
             {
-                if (connectionsDictionary.TryGetValue(guid, out var socket))
-                {
-                    socket.connection.Send(message);
-                }
+                var socetWithMetaData = Connections.connectionsDictionary[socetId];
+                socetWithMetaData.connection.Send(message);
             }
         }
     }

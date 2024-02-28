@@ -1,5 +1,7 @@
 using System.Security.Authentication;
+using System.Text.Json;
 using fleckproject;
+using fleckproject.Exeptions;
 using lib;
 using NUnit.Framework.Internal;
 
@@ -49,7 +51,7 @@ public class Tests
         for (int i = 1; i < 10; i++)
         {
             if (i <= expectedTop)
-            { 
+            {
                 await ws.DoAndAssert(new ClientWansToEchoServerDto()
                 {
                     messageContent = "This should work"
@@ -60,7 +62,7 @@ public class Tests
                 await ws.DoAndAssert(new ClientWansToEchoServerDto()
                 {
                     messageContent = "This should be rejected"
-                }, response => response.Count(dto => checkForeventType(dto, expectedTop, i)) == i-expectedTop);
+                }, response => response.Count(dto => checkForeventType(dto, expectedTop, i)) == i - expectedTop);
             }
         }
     }
@@ -78,14 +80,30 @@ public class Tests
     }
 
     [Test]
-    public async Task EnterRoom()
+    public async Task EnterRoomWithoutAuthenticcation()
     {
         var ws = await new WebSocketTestClient().ConnectAsync();
         await ws.DoAndAssert(new ClientWantsToEnterRoomDto()
         {
             roomId = 1
+        }, response => response.Count(dto => dto.eventType == nameof(ServerSendsErrorMessageToClient)) == 1);
+    }
+
+    [Test]
+    public async Task EnterRoomWithAuth()
+    {
+        var ws = await new WebSocketTestClient().ConnectAsync();
+        await ws.DoAndAssert(new ClientWantsToSignInDto()
+        {
+            Username = "Bob"
+        }, response => response.Count(dto => dto.eventType == nameof(ServerWelcomesUser)) == 1);
+
+        await ws.DoAndAssert(new ClientWantsToEnterRoomDto()
+        {
+            roomId = 1
         }, response => response.Count(dto => dto.eventType == nameof(ServerAddsClientToRoom)) == 1);
     }
+
 
     [Test]
     public async Task ClientWantsToBroardcastToRoom()
@@ -148,5 +166,90 @@ public class Tests
             messageContent = "Hey Bob",
             roomId = 1
         }, response => response.Count(dto => dto.eventType == nameof(ServerBroardcastsMessageWithUsername)) == 2);
+    }
+
+    [Test]
+    public async Task CheckForHateSpeech()
+    {
+        var ws = await new WebSocketTestClient().ConnectAsync();
+        //Takes in an action, and an assertion
+        await ws.DoAndAssert(new ClientWantsToSignInDto()
+        {
+            Username = "Rob"
+        }, response => response.Count(dto => dto.eventType == nameof(ServerWelcomesUser)) == 1);
+
+        await ws.DoAndAssert(new ClientWantsToEnterRoomDto()
+        {
+            roomId = 1
+        }, response => response.Count(dto => dto.eventType == nameof(ServerAddsClientToRoom)) == 1);
+
+
+        await ws.DoAndAssert(new ClientWantsToSendToChatRoomDto()
+        {
+            messageContent = "I hate you",
+            roomId = 1
+        }, response => response.Count(dto => dto.eventType == nameof(ServerSendsErrorMessageToClient)) == 1);
+    }
+
+
+    [Test]
+    public async Task CheckForViolentSpeech()
+    {
+        var ws = await new WebSocketTestClient().ConnectAsync();
+        //Takes in an action, and an assertion
+        await ws.DoAndAssert(new ClientWantsToSignInDto()
+        {
+            Username = "Rob"
+        }, response => response.Count(dto => dto.eventType == nameof(ServerWelcomesUser)) == 1);
+
+        await ws.DoAndAssert(new ClientWantsToEnterRoomDto()
+        {
+            roomId = 1
+        }, response => response.Count(dto => dto.eventType == nameof(ServerAddsClientToRoom)) == 1);
+
+
+        await ws.DoAndAssert(new ClientWantsToSendToChatRoomDto()
+        {
+            messageContent = "I will kill you",
+            roomId = 1
+        }, response => response.Count(dto => dto.eventType == nameof(ServerSendsErrorMessageToClient)) == 1);
+    }
+
+
+    [TestCase(4)]
+    public async Task CheckForBanningByHateSpeech(int expectedTop)
+    {
+        Console.WriteLine(expectedTop);
+        var ws = await new WebSocketTestClient().ConnectAsync();
+        //Takes in an action, and an assertion
+        await ws.DoAndAssert(new ClientWantsToSignInDto()
+        {
+            Username = "Rob"
+        }, response => response.Count(dto => dto.eventType == nameof(ServerWelcomesUser)) == 1);
+
+        await ws.DoAndAssert(new ClientWantsToEnterRoomDto()
+        {
+            roomId = 3
+        }, response => response.Count(dto => dto.eventType == nameof(ServerAddsClientToRoom)) == 1);
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (i < expectedTop)
+            {
+                await ws.DoAndAssert(new ClientWantsToSendToChatRoomDto()
+                {
+                    messageContent = "I hate you",
+                    roomId = 3
+                }, response => response.Count(dto => dto.eventType == nameof(ServerSendsErrorMessageToClient)) == 1);
+            }
+            else
+            {
+                await ws.DoAndAssert(new ClientWantsToSendToChatRoomDto()
+                {
+                    messageContent = "I hate you",
+                    roomId = 3
+                }, response => response.Count(dto => dto.eventType == nameof(TooMuchHateSpeech)) == 1);
+            }
+        }
     }
 }
