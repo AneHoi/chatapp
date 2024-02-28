@@ -8,6 +8,8 @@ import {environment} from 'src/environments/environment';
 import {ToastController} from "@ionic/angular";
 import {UserHandler} from '../userHandler';
 import {TokenService} from 'src/TokenService';
+import {ServerWelcomesUserDto} from "../../BaseDto";
+
 
 @Component({
   selector: 'app-login',
@@ -18,22 +20,25 @@ export class LoginPage implements OnInit {
   currentUser: User | undefined;
   //This is the formbuilder, it is important to SPELL the items as they are spelled in the dto in the API
   emailForm = new FormControl('', [Validators.required, Validators.minLength(2)])
-  passwordForm = new FormControl('',[Validators.required, Validators.minLength(8)])
 
   loginForm = new FormGroup(
     {
-      email: this.emailForm,
-      password: this.passwordForm
+      email: this.emailForm
     }
   )
 
+  private subToWelcomeUser: Subscription;
   private subscription: Subscription;
   dynamicLogInOutText: string = 'Login';
+
 
   constructor(public state: State, private tokenService: TokenService, private userHandler: UserHandler, public http: HttpClient, public fb: FormBuilder, public toastcontroller: ToastController) {
     this.subscription = this.userHandler.logInOutValue$.subscribe((value) => {
       this.dynamicLogInOutText = value;
     })
+    this.subToWelcomeUser = this.state.welcomeUser$.subscribe((dto) => {
+      this.presentToast(dto);
+    });
   }
 
   ngOnInit() {
@@ -47,35 +52,28 @@ export class LoginPage implements OnInit {
     } else {
       this.logout()
     }
-
   }
 
-  async login() {
-    try {
-      const observable = this.http.post<ResponseDto<{
-        token: string
-      }>>(environment.baseURL + '/account/login', this.loginForm.getRawValue())
-      const response = await firstValueFrom(observable);
-      this.tokenService.setToken(response.responseData!.token)
+  login() {
+    var object = {
+      eventType: "ClientWantsToSignIn",
+      Username: this.emailForm.value!
+    }
+    this.state.ws.send(JSON.stringify(object));
+  }
 
-      const toast = await this.toastcontroller.create({
-        message: 'Login was sucessfull',
-        duration: 5000,
-        color: "success"
-      })
-      toast.present();
-    } catch (e) {
-    }
-    //Setting the current user.
-    const observable = this.http.get<ResponseDto<User>>(environment.baseURL + '/account/whoami');
-    const response = await firstValueFrom(observable);
-    this.currentUser = response.responseData;
-    //Securing that the logged in user accually has the information, and not just an empty object
-    if (this.currentUser !== undefined) {
-      this.state.setCurrentUser(this.currentUser);
-      this.changeNameOfCurrentUser(this.state.getCurrentUser().username);
-      this.userHandler.updateLoginOut("Logout");
-    }
+
+  ServerWelcomesUser(dto: ServerWelcomesUserDto){
+    console.log("Welcome")
+    this.presentToast(dto);
+  }
+
+  private async presentToast(dto: ServerWelcomesUserDto) {
+    this.toastcontroller.create({
+      message: dto.message,
+      duration: 5000,
+      color: "success"
+    }).then(r => r.present())
   }
 
   async logout() {

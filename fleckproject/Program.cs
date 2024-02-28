@@ -16,6 +16,19 @@ public static class Startup
 
     public static void Statup(string[] args)
     {
+        Connections.chatRooms.TryAdd(1, new HashSet<Guid>());
+        Connections.chatRooms.TryAdd(2, new HashSet<Guid>());
+        Connections.chatRooms.TryAdd(3, new HashSet<Guid>());
+        Connections.chatRooms.TryAdd(4, new HashSet<Guid>());
+        
+        List<int> rooms = new List<int>();
+        
+        foreach (var chatRoom in Connections.chatRooms)
+        {
+            rooms.Add(chatRoom.Key);
+        }
+        
+        
         var builder = WebApplication.CreateBuilder(args);
 
 
@@ -23,10 +36,9 @@ public static class Startup
         var app = builder.Build();
 
         var server = new WebSocketServer("ws://0.0.0.0:8181");
-        var counter = 1;
         server.Start(socket =>
         {
-            socket.OnOpen = () => { anotherUserJoined(counter, socket); };
+            socket.OnOpen = () => { anotherUserJoined(rooms, socket); };
 
             socket.OnMessage = async message =>
             {
@@ -45,10 +57,11 @@ public static class Startup
         });
     }
 
-    private static void anotherUserJoined(int counter, IWebSocketConnection socket)
+    private static void anotherUserJoined(List<int> rooms, IWebSocketConnection socket)
     {
-        counter++;
+        //Add user to all currently connected
         Connections.AddConnection(socket);
+        //send to all connected people, another has connected, and how many there are 
         foreach (var webSocetWithMetaData in Connections.connectionsDictionary)
         {
             webSocetWithMetaData.Value.connection.Send(JsonSerializer.Serialize(new PeopleCounter()
@@ -57,13 +70,9 @@ public static class Startup
                     infoMessage = "A user has joined the chat"
                 })
             );
-            Connections.AddToRoom(socket, counter);
-            List<int> rooms = new List<int>();
-            foreach (var chatRoom in Connections.chatRooms)
-            {
-                rooms.Add(chatRoom.Key);
-            }
+            
 
+            //Send all rooms to all people
             webSocetWithMetaData.Value.connection.Send(JsonSerializer.Serialize(new AllRooms()
                 {
                     roomIds = rooms

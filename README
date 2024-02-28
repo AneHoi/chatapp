@@ -1,0 +1,4 @@
+remember to open the terminal and the runner and add the environment variable 
+Add 
+FULLSTACK_SKIP_RATE_LIMITING=false
+false, if you need the ratelimiter, and true, if you want the rate limiter to be active 

@@ -26,8 +26,9 @@ export class AppComponent {
     }
   }
 
-  openChat() {
-    console.log("Tapped into chat")
 
+  openChat(chat: number) {
+    this.state.setCuttentRoom(chat);
+    console.log("You tapped into chat: " + chat);
   }
 }

@@ -1,7 +1,12 @@
 import {Injectable} from "@angular/core";
 import {User, Chat, ChatRoom, PeopleCounterDto, AllRoomsDto} from "./Models";
 import {Subject} from "rxjs";
-import {BaseDto} from "./BaseDto";
+import {
+  BaseDto,
+  ServerBroardcastsMessageWithUsernameDto,
+  ServerSendsErrorMessageToClient,
+  ServerWelcomesUserDto
+} from "./BaseDto";
 
 @Injectable({
   providedIn: 'root'
@@ -14,10 +19,9 @@ export class State {
   chatsInRoom: Chat[] = []
   // this "{}" means: Empty object
   currentuser: User = {};
-  peopleInChat: string = "1";
+
   chatMessages: string[] = [];
   currentChatRoom: ChatRoom | undefined
-
 
   listener() {
     this.ws.onmessage = message => {
@@ -32,11 +36,25 @@ export class State {
     }
   }
 
-  PeopleCounter(dto: PeopleCounterDto){
-    this.peopleInChat = dto.numOfPeopleValue + "";
-    this.chatMessages.push(dto.infoMessage)
-    console.log("people in chats: " + dto.numOfPeopleValue + "\n" + dto.infoMessage)
+  welcomeUser = new Subject<ServerWelcomesUserDto>();
+  welcomeUser$ = this.welcomeUser.asObservable();
+  ServerWelcomesUser(dto: ServerWelcomesUserDto){
+    this.welcomeUser.next(dto);
+    console.log("Welcome");
   }
+
+  errorMessage = new Subject<ServerSendsErrorMessageToClient>();
+  errorMessage$ = this.errorMessage.asObservable();
+  ServerSendsErrorMessageToClient(dto: ServerSendsErrorMessageToClient){
+    this.errorMessage.next(dto)
+  }
+
+  peopleInChat = new Subject<PeopleCounterDto>();
+  peopleInChat$ = this.peopleInChat.asObservable();
+  PeopleCounter(dto: PeopleCounterDto){
+    this.peopleInChat.next(dto)
+  }
+
 
   AllRooms(dto: AllRoomsDto){
     this.allchatRooms = dto.roomIds;
@@ -50,7 +68,18 @@ export class State {
   setCurrentUser(user: User): void {
     this.currentuser = user;
   }
+
+  currentRoom = new Subject<number>();
+  currentRoom$ = this.currentRoom.asObservable();
+
+  setCuttentRoom(room: number): void{
+    this.currentRoom.next(room);
+  }
+
+
+  chat = new Subject<ServerBroardcastsMessageWithUsernameDto>();
+  chat$ = this.chat.asObservable();
+  ServerBroardcastsMessageWithUsername(dto: ServerBroardcastsMessageWithUsernameDto){
+    this.chat.next(dto)
+  }
 }
-
-
-
